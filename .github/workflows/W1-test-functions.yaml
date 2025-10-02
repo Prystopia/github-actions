@@ -63,6 +63,8 @@ jobs:
               with:
                 name: app
                 path: react-app/build
+            - name: "run tests"
+              run: npm run test
             #- name: "custom step"
             #  run: test-custom-action
             - name: "first-step"

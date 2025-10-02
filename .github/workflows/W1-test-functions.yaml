@@ -4,13 +4,24 @@ on:
     push: #trigger on push
     workflow_dispatch: #manual trigger
       inputs:
-        test-input: 
+        skip-deploy: 
             type: boolean
             description: This is a test to show the inputs in action
             default: true
         reason: 
             type: string
             description: Please enter the reason for triggering this workflow
+            required: true
+        environment:
+            type: environment
+            required: true
+        selection:
+            type: choice
+            options:
+                - v1
+                - v2
+                - v3
+            required: false
 jobs:
     send-message:
         runs-on: ubuntu-latest
@@ -19,16 +30,20 @@ jobs:
               run: echo "This is a message"                
     get-code:
         runs-on: ubuntu-latest
+        continue-on-error: true #ignores errors in this job and allows following items to be run
+        environment: ${{ inputs.environment }}
         steps:
+            - name: "custom step"
+              run: test-custom-action
             - name: "first-step"
-              run: echo "this is a test ${{ inputs.test-input }}"
+              run: echo "this is a test ${{ inputs.skip-deploy }}"
             - name: "sleep-5"
               run: sleep 5 #sleeps the job for specified amount (5)
             - name: "always-runs"
               if: ${{ always() }}
               run: echo "this step will run"
             - name: "if test-input"
-              if: ${{ inputs.test-input }}
+              if: ${{ inputs.skip-deploy }}
               run: exit 1
             - name: "optional-step"
               if: ${{ success() }}

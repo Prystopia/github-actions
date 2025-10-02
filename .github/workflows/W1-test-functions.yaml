@@ -26,6 +26,8 @@ jobs:
     custom-action:
         runs-on: ubuntu-latest
         steps:
+            - name: checkout # have to checkout code, action cannot be found
+              uses: actions/checkout@v4
             - name: custom-action
               uses: ./.github/actions/test-composite-action # need full path
     send-message:

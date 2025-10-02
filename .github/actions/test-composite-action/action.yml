@@ -10,12 +10,10 @@ description: "Tests composite action functionality"
 
 runs:
   using: composite
-  defaults:
-    run:
-       shell: bash # can set shell as default
   steps:
     - name: Run script
       run: echo "This is a test composte action"
-      shell: bash # has to be set when set in composite action
+      shell: bash # has to be set when set in composite action - can't use default
     - name: Run script 2
       run: echo "This is a test composte action 2"
+      shell: bash # has to be set when set in composite action

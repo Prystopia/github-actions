@@ -7,7 +7,7 @@ on:
         skip-deploy: 
             type: boolean
             description: This is a test to show the inputs in action
-            default: true
+            default: false
         reason: 
             type: string
             description: Please enter the reason for triggering this workflow
@@ -26,10 +26,10 @@ jobs:
     send-message:
         runs-on: ubuntu-latest
         outputs:
-            message: ${{ steps.send-message.outputs.message }}
+            message-text: ${{ steps.send-message.outputs.message }}
         steps:
             - name: "send-message"
-              run: echo "message=This is a message" >> "$GITHUB_OUTPUT"                
+              run: echo "message=${{ inputs.reason }}" >> "$GITHUB_OUTPUT"                
     get-code:
         runs-on: ubuntu-latest
         continue-on-error: true #ignores errors in this job and allows following items to be run

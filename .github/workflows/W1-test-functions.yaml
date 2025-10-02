@@ -106,20 +106,21 @@ jobs:
     test-on-different-arch:
         runs-on: ${{ matrix.os }}
         strategy:
-            fail-fast: false #true = stops all jobs if any fails, #true all jobs stop if one fails
+            fail-fast: false #true = stops all jobs if any fails, #false jobs continue if one fails
             matrix:
                 node: [20,21]
                 os:
                     - ubuntu-latest
                 include: #allows us to specify additional valid config pairs
                   - os: ubuntu-latest
-                    node: 16
-                  - os: ubuntu-latest
+                    node: 16 # won't set any unspecified parameters
+                  - os: ubuntu-latest # this specifies
                     node: 20
                     tag: invalid #add a tag to one of the run options
+                  - test: 10 # amy non-conflicting item will be added to all original matrix options e.g. ubuntu-latest - 20 - 10, ubuntu-latest - 20 - 10, unbuntu-latest - 16 -
+                  - node: 20
+                    test: 100 # adding this specified that all items with a node value of 20 will have a test value of 100
         steps:
           - name: setup node  #use tag to skip invalid build configs
             if: ${{ matrix.tag != 'invalid' }}
-            uses: actions/setup-node@v3
-            with: 
-              node-version: ${{matrix.node}}
+            run: echo "${{matrix.node}} ${{ matrix.os }} ${{ matrix.tag }} ${{ matrix.test }}"

@@ -1,0 +1,11 @@
+name: "test-functions"
+
+on:
+    push:
+
+jobs:
+    echo1:
+        runs-on: unbuntu-latest
+        steps:
+            - name: "first-step"
+              run: "echo this is a test"

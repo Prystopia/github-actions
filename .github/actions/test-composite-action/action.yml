@@ -10,9 +10,9 @@ description: "Tests composite action functionality"
 
 runs:
   using: composite
-  default:
+  defaults:
     run:
-       # can set shell as default
+       shell: bash # can set shell as default
   steps:
     - name: Run script
       run: echo "This is a test composte action"

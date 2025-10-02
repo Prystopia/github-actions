@@ -103,3 +103,15 @@ jobs:
       steps:
         - name: "first-step"
           run: echo "requires all steps to be successful"
+    test-on-different-arch:
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                node: [20,21]
+                os:
+                    - windows-latest
+        steps:
+          - name: setup node
+            uses: actions/setup-node@v3
+            with: 
+              node-version: ${{matrix.os}}

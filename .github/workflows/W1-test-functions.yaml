@@ -118,4 +118,4 @@ jobs:
           - name: setup node
             uses: actions/setup-node@v3
             with: 
-              node-version: ${{matrix.os}}
+              node-version: ${{matrix.node}}

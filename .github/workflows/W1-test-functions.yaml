@@ -3,20 +3,48 @@ name: "test-functions"
 on:
     push: #trigger on push
     workflow_dispatch: #manual trigger
-
+      inputs:
+        test-input: 
+            type: boolean
+            description: This is a test to show the inputs in action
+            default: true
+        reason: 
+            type: string
+            description: Please enter the reason for triggering this workflow
 jobs:
-    echo1:
+    get-code:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "first-step"
+              run: echo "this is a test ${{ inputs.test-input }}"
+            - name: "sleep-5"
+              run: sleep 5 #sleeps the job for specified amount (5)
+            - name: "always-runs"
+              if: ${{ always() }}
+              run: echo "this step will run"
+            - name: "if test-input"
+              if: ${{ inputs.test-input }}
+              run: exit 1
+            - name: "optional-step"
+              if: ${{ success() }}
+              run: echo "this will somethings happen, depending on the input"
+    build-code:
+        needs: 
+          - get-code #runs this job sequentially after the first job
         runs-on: ubuntu-latest
         steps:
             - name: "first-step"
               run: echo "this is a test"
-            - name: "sleep-5"
-              run: sleep 5 #sleeps the job for specified amount (5)
-            - name: "second-step"
-              run: exit 1
             - name: "unreachable-step"
               if: ${{ success() }}
               run: echo "this will never happen"
             - name: "always-runs"
               if: ${{ always() }}
               run: echo "this step will run"
+    test:
+      needs:
+        - build-code
+      runs-on: ubuntu-latest
+      steps:
+        - name: "first-step"
+          run: echo "requires all steps to be successful"

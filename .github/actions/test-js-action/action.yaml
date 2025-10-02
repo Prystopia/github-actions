@@ -1,0 +1,6 @@
+name: custom-js-action
+description: "Tests JS action functionality"
+
+runs:
+  using: node20
+  main: index.js # path to js file

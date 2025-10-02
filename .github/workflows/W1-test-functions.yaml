@@ -113,9 +113,13 @@ jobs:
                     - ubuntu-latest
                 include: #allows us to specify additional valid config pairs
                   - os: ubuntu-latest
-                    node-version: 16
+                    node: 16
+                  - os: ubuntu-latest
+                    node: 20
+                    tag: invalid #add a tag to one of the run options
         steps:
-          - name: setup node
+          - name: setup node  #use tag to skip invalid build configs
+            if: ${{ matrix.tag != 'invalid' }}
             uses: actions/setup-node@v3
             with: 
               node-version: ${{matrix.node}}

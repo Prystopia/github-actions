@@ -8,14 +8,12 @@ description: "Tests composite action functionality"
 #outputs:
 
 
-run:
+runs:
   using: composite
-  default:
-    runs:
-      shell: bash # can set shell as default
   steps:
     - name: Run script
       runs: echo "This is a test composte action"
       shell: bash # has to be set when set in composite action
     - name: Run script 2
       runs: echo "This is a test composte action 2"
+      shell: bash

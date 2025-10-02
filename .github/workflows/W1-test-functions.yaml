@@ -8,4 +8,9 @@ jobs:
         runs-on: unbuntu-latest
         steps:
             - name: "first-step"
-              run: "echo this is a test"
+              run: echo "this is a test"
+            - name: "second-step"
+              run: exit 1
+            - name: "unreachable-step"
+              if: ${{ success() }}
+              run: echo "this will never happen"

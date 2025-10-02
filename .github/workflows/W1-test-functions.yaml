@@ -1,9 +1,9 @@
 name: "test-functions"
 
 on:
-    push: #trigger on push
+   # push: #trigger on push
     workflow_dispatch: #manual trigger
-      inputs:
+      inputs: # inputs can be taken from PR tags, as cannot define inputs for auto triggered items
         skip-deploy: 
             type: boolean
             description: This is a test to show the inputs in action
@@ -30,16 +30,38 @@ jobs:
         steps:
             - name: "send-message"
               id: "send-message" # required to refer to step in brackets above
-              run: echo "message=${{ inputs.reason }}" >> "$GITHUB_OUTPUT"                
+              run: echo "message=${{ inputs.reason }}" >> "$GITHUB_OUTPUT"
+            - name: "see files"
+              run: ls -R                
     get-code:
         runs-on: ubuntu-latest
+        defaults:
+            run: 
+                working-directory: react-app
         continue-on-error: true #ignores errors in this job and allows following items to be run
         environment: ${{ inputs.environment }}
         steps:
-            - name: "custom step"
-              run: test-custom-action
+            - name: checkout
+              uses: actions/checkout@v4
+            - name: setup node
+              uses: actions/setup-node@v3
+              with: 
+                node-version: "20.x"
+            - name: cache #this automatically handles checking and adding the value to the cache
+              uses: actions/cache@v3
+              id: cache
+              with: 
+                key: deps-node-modules-${{ hashFiles('react-app/package-lock.json')}} #can use wildcards
+                path: node_modules
+            - name: install deps
+              if: ${{ !steps.cache.outputs.cache-hit }}
+              run: npm ci
+            #- name: "custom step"
+            #  run: test-custom-action
             - name: "first-step"
-              run: echo "this is a test ${{ inputs.skip-deploy }}"
+              run: | #pipe allows multi-line run statements
+                echo "this is a test ${{ inputs.skip-deploy }}"
+                echo "second line"
             - name: "sleep-5"
               run: sleep 5 #sleeps the job for specified amount (5)
             - name: "always-runs"

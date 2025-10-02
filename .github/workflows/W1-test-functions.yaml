@@ -23,6 +23,11 @@ on:
                 - v3
             required: false
 jobs:
+    custom-action:
+        runs-on: ubuntu-latest
+        steps:
+            - name: custom-action
+              uses: ./.github/actions/test-composite-action # need full path
     send-message:
         runs-on: ubuntu-latest
         outputs:
@@ -65,8 +70,6 @@ jobs:
                 path: react-app/build
             - name: "run tests"
               run: npm run test
-            #- name: "custom step"
-            #  run: test-custom-action
             - name: "first-step"
               run: | #pipe allows multi-line run statements
                 echo "this is a test ${{ inputs.skip-deploy }}"
@@ -120,6 +123,9 @@ jobs:
                   - test: 10 # amy non-conflicting item will be added to all original matrix options e.g. ubuntu-latest - 20 - 10, ubuntu-latest - 20 - 10, unbuntu-latest - 16 -
                   - node: 18
                     test: 100 # adding this specified that all items with a node value of 20 will have a test value of 100
+                exclude: #used to exclude specific options - this check is run before the include
+                  - os: ubuntu-latest
+                    node: 21
         steps:
           - name: setup node  #use tag to skip invalid build configs
             if: ${{ matrix.tag != 'invalid' }}

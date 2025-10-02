@@ -26,9 +26,10 @@ jobs:
     send-message:
         runs-on: ubuntu-latest
         outputs:
-            message-text: ${{ steps.send-message.outputs.message }}
+            message-text: ${{ steps.send-message.outputs.message }} #name of output doesn't have to match
         steps:
             - name: "send-message"
+              id: "send-message" # required to refer to step in brackets above
               run: echo "message=${{ inputs.reason }}" >> "$GITHUB_OUTPUT"                
     get-code:
         runs-on: ubuntu-latest
@@ -57,7 +58,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "first-step"
-              run: echo "this is a test ${{ needs.send-message.outputs.message }}"
+              run: echo "this is a test ${{ needs.send-message.outputs.message-text }}" #refer to output name here, not variable key name
             - name: "unreachable-step"
               if: ${{ success() }}
               run: echo "this will never happen"

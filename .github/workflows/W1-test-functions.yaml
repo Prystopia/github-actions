@@ -25,9 +25,11 @@ on:
 jobs:
     send-message:
         runs-on: ubuntu-latest
+        outputs:
+            message: ${{ steps.send-message.outputs.message }}
         steps:
             - name: "send-message"
-              run: echo "This is a message"                
+              run: echo "message=This is a message" >> "$GITHUB_OUTPUT"                
     get-code:
         runs-on: ubuntu-latest
         continue-on-error: true #ignores errors in this job and allows following items to be run
@@ -51,10 +53,11 @@ jobs:
     build-code:
         needs: 
           - get-code #runs this job sequentially after the first job
+          - send-message
         runs-on: ubuntu-latest
         steps:
             - name: "first-step"
-              run: echo "this is a test"
+              run: echo "this is a test ${{ needs.send-message.outputs.message }}"
             - name: "unreachable-step"
               if: ${{ success() }}
               run: echo "this will never happen"

@@ -12,6 +12,11 @@ on:
             type: string
             description: Please enter the reason for triggering this workflow
 jobs:
+    send-message:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "send-message"
+              run: echo "This is a message"                
     get-code:
         runs-on: ubuntu-latest
         steps:

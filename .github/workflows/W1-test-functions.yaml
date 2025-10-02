@@ -106,10 +106,14 @@ jobs:
     test-on-different-arch:
         runs-on: ${{ matrix.os }}
         strategy:
+            fail-fast: false #true = stops all jobs if any fails, #true all jobs stop if one fails
             matrix:
                 node: [20,21]
                 os:
-                    - windows-latest
+                    - ubuntu-latest
+                include: #allows us to specify additional valid config pairs
+                  - os: ubuntu-latest
+                    node-version: 16
         steps:
           - name: setup node
             uses: actions/setup-node@v3
